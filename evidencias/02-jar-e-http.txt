@@ -1,0 +1,41 @@
+waiting for server to start.... done
+server started
+postgres (PostgreSQL) 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
+openjdk version "21.0.13.1" 2026-11-17
+OpenJDK Runtime Environment (build 21.0.13.1+2-1-24.04.1-Ubuntu)
+OpenJDK 64-Bit Server VM (build 21.0.13.1+2-1-24.04.1-Ubuntu, mixed mode, sharing)
+
+$ java -jar target/ludoteca-api.jar
+GET /actuator/health → HTTP 200
+{"groups":["liveness","readiness"],"status":"UP"}
+GET /jogos → HTTP 200
+[]
+POST /jogos → HTTP 400
+{"detail":"Failed to read request","instance":"/jogos","status":400,"title":"Bad Request"}
+POST /jogos → HTTP 400
+{"detail":"O máximo de jogadores deve ser maior ou igual ao mínimo.","instance":"/jogos","status":400,"title":"Bad Request"}
+POST /jogos → HTTP 201
+{"categoria":"Estratégia","duracaoMinutos":45,"id":1,"maximoJogadores":4,"minimoJogadores":2,"titulo":"Trilha das Ilhas"}
+GET /jogos/1 → HTTP 200
+{"categoria":"Estratégia","duracaoMinutos":45,"id":1,"maximoJogadores":4,"minimoJogadores":2,"titulo":"Trilha das Ilhas"}
+PUT /jogos/1 → HTTP 200
+{"categoria":"Estratégia","duracaoMinutos":60,"id":1,"maximoJogadores":5,"minimoJogadores":2,"titulo":"Trilha das Ilhas"}
+GET /jogos → HTTP 200
+[{"categoria":"Estratégia","duracaoMinutos":60,"id":1,"maximoJogadores":5,"minimoJogadores":2,"titulo":"Trilha das Ilhas"}]
+DELETE /jogos/1 → HTTP 204
+
+GET /jogos/1 → HTTP 404
+{"detail":"Jogo de ID 1 não encontrado.","instance":"/jogos/1","status":404,"title":"Not Found"}
+
+Trechos do log da aplicação
+	Database JDBC URL [jdbc:postgresql://127.0.0.1:60507/ludoteca]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+2026-11-23T10:11:50.713-03:00  INFO 59 --- [ludoteca-api] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 48801 (http) with context path '/'
+2026-11-23T10:11:50.734-03:00  INFO 59 --- [ludoteca-api] [           main] br.com.ludoteca.LudotecaApplication      : Started LudotecaApplication in 9.392 seconds (process running for 10.588)
+2026-11-23T10:11:52.671-03:00  INFO 59 --- [ludoteca-api] [.1-48801-exec-7] br.com.ludoteca.JogoController           : Jogo cadastrado. id=1
+2026-11-23T10:11:52.783-03:00  INFO 59 --- [ludoteca-api] [.1-48801-exec-1] br.com.ludoteca.JogoController           : Jogo atualizado. id=1
+2026-11-23T10:11:52.888-03:00  INFO 59 --- [ludoteca-api] [.1-48801-exec-4] br.com.ludoteca.JogoController           : Jogo excluído. id=1
+
+SHA-256 do JAR executado
+e10352412b9d9bd805dfc2dad22c714ec37cd9018a9f91c5f7f7683df4a9d7d9  target/ludoteca-api.jar
